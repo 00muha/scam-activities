@@ -1,0 +1,13 @@
+name = "sauti-api"
+main = "worker.js"
+compatibility_date = "2026-10-30"
+workers_dev = true
+
+[vars]
+MAIN_SITE_NAME = "main-scam-detector"
+ALLOWED_ORIGINS = "https://community.example,https://your-main-site.example"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "sauti-db"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"

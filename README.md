@@ -18,6 +18,82 @@ The application must normalize Kenyan numbers and compute an HMAC-SHA-256 finger
 
 The schema includes user accounts, reports and main-site detection deduplication, protected number references, report votes, threaded comments, roast posts and reactions, user flags, moderation actions, and weekly highlights. Configure database roles and grant only the needed table/column access to the application; the schema does not create database credentials or enforce row-level security by itself.
 
+## Cloudflare Workers + D1
+
+For Cloudflare, use [database/schema.d1.sql](database/schema.d1.sql) and [worker.js](worker.js). D1 uses SQLite, so do not apply the PostgreSQL `database/schema.sql` file to D1. [wrangler.toml.example](wrangler.toml.example) is the configuration template.
+
+1. Install Wrangler and sign in:
+
+	```sh
+	npm install --save-dev wrangler
+	npx wrangler login
+	```
+
+2. Create the D1 database and copy the returned ID into a local `wrangler.toml` copied from the example:
+
+	```sh
+	npx wrangler d1 create sauti-db
+	cp wrangler.toml.example wrangler.toml
+	```
+
+	Replace `REPLACE_WITH_D1_DATABASE_ID`; set `ALLOWED_ORIGINS` to the exact HTTPS origins of the deployed community site and main site. Do not commit `wrangler.toml` if it contains private environment values.
+
+3. Apply the D1 schema locally, then remotely:
+
+	```sh
+	npx wrangler d1 execute sauti-db --local --file=database/schema.d1.sql
+	npx wrangler d1 execute sauti-db --remote --file=database/schema.d1.sql
+	```
+
+4. Create the Cloudflare Turnstile widget for community writes. Add its **site key** to the community frontend and submit the returned `turnstileToken` with report, comment, vote, flag, and roast requests. The matching secret belongs only in Worker secrets.
+
+5. Add secrets interactively. Generate each random secret locally (for example, `openssl rand -base64 32`) and paste it at the Wrangler prompt; never put these values in source code or send them through chat:
+
+	```sh
+	npx wrangler secret put PHONE_LOOKUP_HMAC_KEY
+	npx wrangler secret put PHONE_ENCRYPTION_KEY
+	npx wrangler secret put ACTOR_HMAC_KEY
+	npx wrangler secret put TURNSTILE_SECRET
+	npx wrangler secret put MAIN_SITE_API_KEY
+	npx wrangler secret put ADMIN_API_KEY
+	```
+
+	`PHONE_ENCRYPTION_KEY` must be base64 encoding of exactly 32 random bytes. Use different random values for each secret. Keep backups of encryption keys in a secure key manager; losing the key means encrypted stored phone numbers cannot be recovered.
+
+6. Deploy and check health:
+
+	```sh
+	npx wrangler deploy
+	curl https://YOUR-WORKER.workers.dev/api/health
+	```
+
+7. Connect the main detector **server-to-server**. Keep `MAIN_SITE_API_KEY` on the main site's backend, not in browser JavaScript:
+
+	```js
+	await fetch(`${SAUTI_API_URL}/api/detections`, {
+	  method: "POST",
+	  headers: {
+		 "Authorization": `Bearer ${process.env.SAUTI_MAIN_SITE_API_KEY}`,
+		 "Content-Type": "application/json"
+	  },
+	  body: JSON.stringify({
+		 detectionId: detectorResult.id,
+		 scamType: detectorResult.type,
+		 title: detectorResult.title,
+		 description: detectorResult.summary,
+		 phoneNumber: detectorResult.phoneNumber
+	  })
+	});
+	```
+
+	`detectionId` makes retries idempotent. Detections are stored as `pending` until approved, so they will not appear in public search/feed until a moderator publishes them.
+
+8. Review pending detections/reports with `GET /api/admin/reports` and publish one with `PATCH /api/admin/reports/REPORT_ID`, JSON body `{"status":"published","reason":"Reviewed"}`, and the `ADMIN_API_KEY` bearer token. Keep this key in an admin backend or secure operator environment.
+
+The Worker provides `GET /api/reports`, `GET /api/numbers?number=...`, community report submission, comments, votes, flags, roasts, main-site detections, and admin moderation. All public number values are masked. The static page still uses its local demo state until its forms are changed to call this API; deployment of the Worker alone does not connect the frontend.
+
+Before public launch, configure Cloudflare rate-limiting rules for API reads/writes (especially number lookup), keep Turnstile enabled, set exact allowed origins, and test moderation/retention. The Worker does not log raw phone numbers, but Cloudflare platform analytics and any surrounding proxies should also be reviewed for query-string retention.
+
 ## Demo behavior
 
 - Seed content in `app.js` includes ten fictional Kenya-relevant tactic reports, including fake hospital payment requests, Safaricom/M-Pesa impersonation, bank security calls, health-cover and tax refund lures, job fees, loan fees, and account takeover attempts.
