@@ -2,8 +2,6 @@
 -- Phone numbers are not stored in plaintext. The Worker stores encrypted E.164
 -- values plus a keyed HMAC-SHA-256 fingerprint and a masked display value.
 
-PRAGMA foreign_keys = ON;
-
 CREATE TABLE IF NOT EXISTS members (
     id TEXT PRIMARY KEY,
     auth_subject TEXT UNIQUE,
