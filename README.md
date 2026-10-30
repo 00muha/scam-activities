@@ -1,0 +1,59 @@
+# SAUTI Community Lab
+
+A standalone, static community prototype for scam-awareness conversations and Kenyan mobile-number lookup. It is intentionally separate from any existing scam-detection site and uses only HTML, CSS, and JavaScript.
+
+## Run
+
+Open `index.html` directly in a browser. No build step or package install is required. Google Fonts are loaded remotely; the page falls back to system sans-serif fonts if they are unavailable.
+
+## PostgreSQL schema
+
+The relational database schema is in [database/schema.sql](database/schema.sql). It targets PostgreSQL 13+ and can be applied with:
+
+```sh
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f database/schema.sql
+```
+
+The application must normalize Kenyan numbers and compute an HMAC-SHA-256 fingerprint using a secret pepper held outside the database. Encrypt the canonical number with an application/KMS-managed key before inserting it into `sauti.phone_number_refs`; store only the masked display value for client responses. To find associated reports, query the fingerprint and then select published reports by `phone_number_ref_id`. Never send the encrypted number or fingerprint to browsers.
+
+The schema includes user accounts, reports and main-site detection deduplication, protected number references, report votes, threaded comments, roast posts and reactions, user flags, moderation actions, and weekly highlights. Configure database roles and grant only the needed table/column access to the application; the schema does not create database credentials or enforce row-level security by itself.
+
+## Demo behavior
+
+- Seed content in `app.js` includes ten fictional Kenya-relevant tactic reports, including fake hospital payment requests, Safaricom/M-Pesa impersonation, bank security calls, health-cover and tax refund lures, job fees, loan fees, and account takeover attempts.
+- Search, category filters, sorting, votes, comments, report submission, and roast submission run in the browser.
+- Kenyan number lookup accepts `07...`, `01...`, `7...`, `1...`, and `+254...` mobile formats. Displays use `+254 7xx xxx xxx` (without a domestic leading zero). The reported-number directory lists masked numbers and can browse associated reports, including after reload. Exact matching by a submitted number is only available in the current tab because full numbers are not persisted; the prototype is not connected to a phone-number database.
+- Votes, comments, and submitted reports are stored in browser `localStorage` under `sauti-community-demo-v1` when available. Full numbers are not persisted; public report cards show only masked numbers. New number associations exist only in current-tab memory.
+- The demo banner and report form identify sample content as fictional, show a caution that community reports are unverified, and discourage identifying details or confrontation.
+
+## Backend integration points
+
+SAUTI exposes `window.SAUTI.registerDetection(payload)` for the main detector. Call it when the detector returns a result in the same page. For two pages on the same origin, send the same payload using the `sauti-detections` `BroadcastChannel`; SAUTI must be open to receive it. Both routes accept arbitrary scam type labels.
+
+```js
+const detection = {
+	detectionId: "det-unique-id",
+	scamType: "Investment impersonation",
+	title: "Unexpected investment account message",
+	description: "The detector's short explanation of the warning signs.",
+	phoneNumber: "+254 712 345 678"
+};
+
+// Same page:
+window.SAUTI.registerDetection(detection);
+
+// Separate pages on the same origin:
+new BroadcastChannel("sauti-detections").postMessage(detection);
+```
+
+`detectionId` is used to avoid registering the same result twice. `phoneNumber` is optional; when supplied it must be a Kenyan mobile format. Full numbers are held only in current-tab memory and removed before local storage; SAUTI renders a masked value. The connected main site must explicitly send detections: this bridge does not discover or connect to another website automatically. Different origins require a shared backend/API with authentication and appropriate CORS, not `BroadcastChannel`.
+
+Replace `loadState()` and `saveState()` in `app.js` with API-backed data loading and mutations for durable cross-device sharing. The number-search handler currently filters in-memory reports; replace it with a privacy-reviewed backend lookup endpoint. Keep full numbers out of public responses and logs, return masked display values, and apply access controls and retention limits. Keep the existing rendering functions as the presentation layer; report and comment objects are plain data records that can be mapped to database responses.
+
+Suggested records:
+
+- `Report`: `id`, `title`, `category`, `author`, `story`, `pattern`, `reports`, `up`, `down`, `createdAt`, `comments`, and a protected phone-number reference
+- `Comment`: `author`, `text`, and a report reference
+- `Roast`: `author`, `text`, `target`, and a reaction count
+
+Before enabling public posting or number lookups, add authentication, server-side validation, abuse reporting, moderation, rate limits, a process for correcting/removing mistaken reports, and a clear privacy/retention policy for phone numbers. Frontend-only checks are not a moderation or security boundary. Do not treat community allegations as verified identity or proof of wrongdoing.

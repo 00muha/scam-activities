@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101622">
+  <meta name="description" content="SAUTI is a fictional, community-powered scam awareness hub for sharing tactics and checking Kenyan phone numbers.">
+  <title>SAUTI — Spot the play. Share the tell.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="demo-ribbon"><span class="ribbon-dot"></span> DEMO MODE <span>All names, numbers, stories, and interactions are fictional.</span></div>
+  <header class="topbar">
+    <a class="brand" href="#home" aria-label="SAUTI home">
+      <span class="brand-mark"><span></span><span></span><span></span></span>
+      <span>SAUTI<small>COMMUNITY VOICE</small></span>
+    </a>
+    <nav class="primary-nav" aria-label="Primary navigation">
+      <a class="nav-link is-active" href="#feed" data-view="feed">The feed</a>
+      <a class="nav-link" href="#roasts" data-view="roasts">Scam roast <span class="nav-spark">✳</span></a>
+      <a class="nav-link" href="#hall-of-fame" data-view="hall">Hall of fame</a>
+    </nav>
+    <div class="top-actions">
+      <button class="icon-button search-toggle" type="button" aria-label="Focus search" title="Search the community"><span class="search-glyph"></span></button>
+      <button class="button button-small button-accent" type="button" data-open-composer="report"><span class="plus-glyph">+</span> Drop a report</button>
+      <button class="mobile-menu" type="button" aria-label="Open navigation" aria-expanded="false"><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main id="home">
+    <section class="hero shell" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="live-pulse"></span> THE INTERNET'S SCAM AWARENESS CLUB</div>
+        <h1 id="hero-title">Spot the play.<br><span>Share the tell.</span></h1>
+        <p>Real talk about fake tactics. Swap notes, sharpen your instincts, and make the next scam a lot less convincing.</p>
+        <div class="hero-actions">
+          <a class="button button-light" href="#feed">Explore the feed <span aria-hidden="true">↘</span></a>
+          <div class="member-stack" aria-label="Community activity, demo avatars">
+            <span class="mini-avatar av-lime">M</span><span class="mini-avatar av-coral">J</span><span class="mini-avatar av-cyan">A</span><span class="member-count">+2.4k<br><small>learners</small></span>
+          </div>
+        </div>
+        <div class="hero-stats"><div><strong>8,412</strong><span>tactics logged</span></div><i></i><div><strong>96%</strong><span>community rated useful</span></div><i></i><div><strong>24/7</strong><span>curiosity encouraged</span></div></div>
+      </div>
+      <div class="hero-art" aria-label="Illustration of a suspicious message being inspected">
+        <div class="art-label label-top"><span class="label-icon">✳</span> PATTERN SPOTTED <b>+1</b></div>
+        <div class="phone-card">
+          <div class="phone-head"><span class="phone-avatar">!</span><div><strong>Urgent Delivery</strong><small>unknown sender · now</small></div><span class="more-dots">•••</span></div>
+          <div class="message-bubble">Your package is HELD.<br>Pay $1.28 now or it<br>goes back forever.</div>
+          <div class="message-link"><span>↗</span> track-my-box.example</div>
+          <div class="phone-footer"><span>Hmm, something's off</span><span class="warning-chip">SCAMMY</span></div>
+        </div>
+        <div class="magnifier"><span></span><b>!</b></div>
+        <div class="art-sticker sticker-left">TOO URGENT<br>TO BE TRUE <span>↗</span></div>
+        <div class="art-sticker sticker-right"><span>✦</span> STAY<br>CURIOUS</div>
+        <div class="art-label label-bottom"><span class="check-icon">✓</span> LINK CHECKED <b>not today</b></div>
+        <span class="art-star star-one">✳</span><span class="art-star star-two">✦</span>
+      </div>
+    </section>
+
+    <section class="number-check shell" id="number-check" aria-labelledby="number-check-title">
+      <div class="number-check-copy"><span class="panel-kicker">KENYA NUMBER CHECK</span><h2 id="number-check-title">Heard from this number?<br><span>Check the community signals.</span></h2><p>Search in Kenyan mobile format. Demo results are fictional; a match is not proof of wrongdoing.</p></div>
+      <form class="number-search-form" id="number-search-form">
+        <label class="number-input-wrap"><span class="kenya-code">KE <b>+254</b></span><input id="number-search-input" type="tel" inputmode="tel" autocomplete="tel" placeholder="7XX XXX XXX" aria-label="Kenyan mobile phone number, without the leading zero" required></label>
+        <button class="button button-dark" type="submit">Check number <span>⌕</span></button>
+        <small>Supports 07…, 01…, or +254… format</small>
+      </form>
+      <div class="number-results" id="number-results" aria-live="polite" hidden></div>
+    </section>
+
+    <section class="week-strip shell" aria-label="Scammer of the week">
+      <div class="week-badge"><span>🏆</span><b>SCAM OF<br>THE WEEK</b><small>WEEK 42</small></div>
+      <div class="week-feature">
+        <div class="week-avatar">📱</div>
+        <div class="week-name"><span class="tiny-label">FICTIONAL TACTIC · COMMUNITY PICK</span><h2>M-Pesa Reversal Call <span class="winner-tag">#1 THIS WEEK</span></h2><p>The unsolicited “customer care” call asking for your OTP.</p></div>
+      </div>
+      <div class="week-votes"><strong>1,284</strong><span>pattern flags</span></div>
+      <a class="week-link" href="#feed">See the breakdown <span>↗</span></a>
+    </section>
+
+    <div class="content-shell shell">
+      <section class="feed-column" id="feed" aria-labelledby="feed-title">
+        <div class="section-heading">
+          <div><div class="eyebrow eyebrow-dark">THE COMMUNITY BOARD <span class="heading-dash"></span></div><h2 id="feed-title">Fresh from the feed<span class="heading-period">.</span></h2></div>
+          <button class="button button-outline" type="button" data-open-composer="report"><span class="plus-glyph">+</span> Add your story</button>
+        </div>
+        <div class="feed-controls">
+          <div class="feed-tabs" role="tablist" aria-label="Feed categories">
+            <button type="button" class="feed-tab is-selected" role="tab" aria-selected="true" data-filter="all">All signals <span class="tab-count" id="all-count">10</span></button>
+            <button type="button" class="feed-tab" role="tab" aria-selected="false" data-filter="phishing">Phishing</button>
+            <button type="button" class="feed-tab" role="tab" aria-selected="false" data-filter="marketplace">Marketplace</button>
+            <button type="button" class="feed-tab" role="tab" aria-selected="false" data-filter="impersonation">Impersonation</button>
+          </div>
+          <div class="feed-tools">
+            <label class="search-field"><span class="search-glyph"></span><input id="search-input" type="search" placeholder="Search tactics..." aria-label="Search reports"></label>
+            <label class="sort-select"><span class="sr-only">Sort reports</span><select id="sort-select"><option value="popular">Most popular</option><option value="newest">Newest first</option><option value="reported">Most reported</option></select></label>
+          </div>
+        </div>
+        <div class="active-filter-note" id="active-filter-note" aria-live="polite"></div>
+        <div class="post-list" id="post-list" aria-live="polite"></div>
+        <div class="empty-state" id="empty-state" hidden><span>⌕</span><h3>No signals found</h3><p>Try a different search or category.</p><button class="text-button" type="button" id="clear-filters">Clear filters</button></div>
+        <button class="load-more" id="load-more" type="button">That's the whole demo feed <span>✳</span></button>
+      </section>
+
+      <aside class="side-column" aria-label="Community highlights">
+        <section class="sidebar-panel trending-panel" aria-labelledby="trending-title">
+          <div class="panel-title"><div><span class="panel-kicker">WHAT'S GETTING CLOCKED</span><h2 id="trending-title">Trending <span>↗</span></h2></div><span class="trend-live"><i></i> LIVE</span></div>
+          <div class="trend-list">
+            <button class="trend-item" data-trend="impersonation"><span class="trend-number">01</span><span class="trend-emoji">📱</span><span class="trend-copy"><b>M-Pesa reversal calls</b><small>OTP and PIN requests</small></span><span class="trend-change">+28%</span></button>
+            <button class="trend-item" data-trend="phishing"><span class="trend-number">02</span><span class="trend-emoji">🏦</span><span class="trend-copy"><b>Bank security calls</b><small>Fake account alerts</small></span><span class="trend-change">+19%</span></button>
+            <button class="trend-item" data-trend="impersonation"><span class="trend-number">03</span><span class="trend-emoji">🏥</span><span class="trend-copy"><b>Hospital payment pressure</b><small>Urgent deposit requests</small></span><span class="trend-change">+14%</span></button>
+            <button class="trend-item" data-trend="phishing"><span class="trend-number">04</span><span class="trend-emoji">🧾</span><span class="trend-copy"><b>Fake refund messages</b><small>Tax and account links</small></span><span class="trend-change">+9%</span></button>
+          </div>
+          <div class="trend-foot">Based on fictional community activity <span>↗</span></div>
+        </section>
+
+        <section class="sidebar-panel number-directory" aria-labelledby="directory-title">
+          <div class="panel-title"><div><span class="panel-kicker">COMMUNITY LOOKUP</span><h2 id="directory-title">Reported numbers</h2></div><span class="directory-count" id="directory-count">0</span></div>
+          <p class="panel-subtitle">Masked numbers with community reports. Select one to review its signals.</p>
+          <ul class="number-directory-list" id="number-directory-list"></ul>
+          <p class="directory-footnote">Reports are unverified. A listing is not proof of wrongdoing.</p>
+        </section>
+
+        <section class="sidebar-panel hall-panel" id="hall-of-fame" aria-labelledby="hall-title">
+          <div class="panel-title"><div><span class="panel-kicker">THE HALL OF FAME</span><h2 id="hall-title">Hall of <em>shame</em></h2></div><span class="trophy-mark">🏆</span></div>
+          <p class="panel-subtitle">Tactics with the most community flags. All demo entries are made up.</p>
+          <ol class="leaderboard" id="leaderboard"></ol>
+          <button class="panel-link" type="button" data-open-composer="report">Add a pattern <span>↗</span></button>
+        </section>
+
+        <section class="roast-panel" id="roasts" aria-labelledby="roast-title">
+          <div class="roast-top"><span>✳</span><span>THE ROAST CORNER</span><span>✳</span></div>
+          <h2 id="roast-title">Scam roast</h2>
+          <p class="roast-intro">We roast the <em>tactic</em>, not the target.</p>
+          <div class="roast-quote" id="featured-roast"><span class="quote-mark">“</span><p>That 'safe account' sounds safest for the person who owns it. Which isn't you.</p><div class="roast-byline"><span class="roast-avatar">R</span><span><b>@reply_guy_404</b><small>on the fake bank security call</small></span><span class="laugh-count">😂 84</span></div></div>
+          <button class="roast-next" id="next-roast" type="button">Another roast <span>↻</span></button>
+          <button class="roast-button" type="button" data-open-composer="roast">Submit a roast <span>↗</span></button>
+        </section>
+
+        <div class="sidebar-safety"><span>✦</span><p><b>Keep it clever, keep it kind.</b><br>Talk about tactics. Never post private info or identify a real person.</p></div>
+      </aside>
+    </div>
+
+    <section class="closing-banner shell"><div class="closing-spark">✳</div><div><span class="tiny-label">YOU'RE HARDER TO FOOL TOGETHER</span><h2>Got a weird message?<br><span>Make it a teachable moment.</span></h2></div><button class="button button-dark" type="button" data-open-composer="report">Share a signal <span>↗</span></button><span class="closing-doodle">NOPE<br>ENERGY</span></section>
+  </main>
+  <footer class="site-footer shell"><a class="footer-brand" href="#home">SAUTI</a><p>A community prototype for scam awareness.<br>Demo content is fictional and for illustration only.</p><div class="footer-links"><a href="#number-check">Number check</a><a href="#feed">Community</a><a href="#roasts">Roast corner</a><a href="#hall-of-fame">Hall of fame</a></div><span class="copyright">© 2026 SAUTI LAB</span></footer>
+
+  <dialog class="composer-dialog" id="composer-dialog" aria-labelledby="composer-title">
+    <form class="composer-form" id="composer-form">
+      <div class="dialog-header"><div><span class="panel-kicker">ADD TO THE COMMUNITY</span><h2 id="composer-title">Drop a signal<span class="heading-period">.</span></h2></div><button class="icon-button dialog-close" type="button" aria-label="Close dialog">×</button></div>
+      <div class="composer-type" role="group" aria-label="Post type"><button class="type-option is-active" type="button" data-composer-type="report">Community report</button><button class="type-option" type="button" data-composer-type="roast">Scam roast</button></div>
+      <div class="safety-callout"><span>✦</span><p>Describe what happened without names, addresses, account details, or links. Phone numbers are masked in community cards. Demo submissions stay in this browser.</p></div>
+      <label class="form-label" id="title-label">What should we call this tactic?<input id="report-title" maxlength="72" required placeholder="e.g. Fake M-Pesa reversal call"></label>
+      <div class="form-row" id="report-options"><label class="form-label">Pattern type<select id="report-category"><option value="phishing">Phishing & fake alerts</option><option value="marketplace">Marketplace bait</option><option value="impersonation">Impersonation</option><option value="investment">Investment promise</option><option value="other">Other tactic</option></select></label><label class="form-label">Demo username<input id="report-author" maxlength="20" placeholder="e.g. pixel_scout" autocomplete="off"></label></div>
+      <label class="form-label" id="phone-label">Kenyan mobile number<span class="report-phone-input"><span class="kenya-code">KE <b>+254</b></span><input id="report-phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="12" required placeholder="7XX XXX XXX"></span><span class="field-hint">Enter the 9 digits after +254. Shown masked in the feed.</span></label>
+      <label class="form-label" id="story-label">What was the tell?<textarea id="report-story" rows="4" maxlength="420" required placeholder="Describe the pressure, promise, or red flag. Leave identifying details out."></textarea><span class="character-count" id="character-count">0 / 420</span></label>
+      <div class="composer-error" id="composer-error" role="alert"></div>
+      <div class="dialog-actions"><span class="demo-tag">FRONTEND DEMO · NOT SENT ANYWHERE</span><button class="button button-dark" type="submit" id="submit-post">Post signal <span>↗</span></button></div>
+    </form>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
